@@ -53,7 +53,9 @@
     "test:all": "yarn test './test/e2e/**/*.spec.ts' && cross-env TEST=true mocha 'test/unit/**/*.spec.ts'",
     "test:e2e": "yarn test './test/e2e/**/*.spec.ts'",
     "test:gas": "cross-env REPORT_GAS=1 npx hardhat test",
-    "test:unit": "yarn test 'test/unit/**/*.spec.ts'"
+    "test:unit": "yarn test 'test/unit/**/*.spec.ts'",
+    "trades:fantom": "npx hardhat run scripts/execute-fantom-pending-trades.ts",
+    "trades:mainnet": "npx hardhat run scripts/execute-mainnet-pending-trades.ts"
   },
   "lint-staged": {
     "*.{js,css,md,ts,sol,json}": "prettier --write",
@@ -66,7 +68,9 @@
     "eth-gas-reporter/colors": "1.4.0"
   },
   "dependencies": {
-    "@yearn-mechanics/yswaps": "0.2.0"
+    "@flashbots/ethers-provider-bundle": "0.4.3",
+    "@yearn-mechanics/yswaps": "0.2.0",
+    "axios-retry": "3.2.4"
   },
   "devDependencies": {
     "@codechecks/client": "0.1.12",

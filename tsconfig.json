@@ -13,9 +13,13 @@
       "@deployments": ["deployments/*"],
       "@typechained": ["typechained/index"],
       "@utils": ["test/utils/index"],
-      "@utils/*": ["test/utils/*"],
+      "@utils/*": ["./utils/*"],
+      "@test-utils": ["test/utils"],
+      "@test-utils/*": ["test/utils/*"],
       "@e2e/*": ["test/e2e/*"],
       "@unit/*": ["test/unit/*"],
+      "@libraries/*": ["scripts/libraries/*"],
+      "@scripts/*": ["scripts/*"],
       "@eth-sdk-types": ["node_modules/.dethcrypto/eth-sdk-client/esm/types"]
     }
   },
