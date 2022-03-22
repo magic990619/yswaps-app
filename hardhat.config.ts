@@ -22,9 +22,13 @@ const networks: NetworksUserConfig =
             url: env.getNodeUrl('ethereum'),
           },
         },
-        kovan: {
-          url: env.getNodeUrl('kovan'),
-          accounts: env.getAccounts('kovan'),
+        fantom: {
+          url: env.getNodeUrl('fantom'),
+          accounts: env.getAccounts('fantom'),
+        },
+        polygon: {
+          url: env.getNodeUrl('polygon'),
+          accounts: env.getAccounts('polygon'),
         },
         ethereum: {
           url: env.getNodeUrl('ethereum'),
@@ -68,6 +72,12 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: env.getEtherscanAPIKeys(['ethereum']),
+  },
+  external: {
+    deployments: {
+      ethereum: ['node_modules/@yearn-mechanics/yswaps/deployments/mainnet'],
+      fantom: ['node_modules/@yearn-mechanics/yswaps/deployments/fantom'],
+    },
   },
   typechain: {
     outDir: 'typechained',

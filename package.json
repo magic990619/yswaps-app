@@ -65,7 +65,9 @@
     "cli-table@^0.3.1/colors": "1.0.3",
     "eth-gas-reporter/colors": "1.4.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@yearn-mechanics/yswaps": "0.2.0"
+  },
   "devDependencies": {
     "@codechecks/client": "0.1.12",
     "@commitlint/cli": "16.2.1",
