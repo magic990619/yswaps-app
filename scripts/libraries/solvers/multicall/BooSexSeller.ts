@@ -1,12 +1,6 @@
 import _ from 'lodash';
 import { utils, constants, PopulatedTransaction } from 'ethers';
-import {
-  IUniswapV2Router02__factory,
-  IERC20__factory,
-  IWETH__factory,
-  TradeFactory,
-  ISolidlyRouter__factory,
-} from '@yearn-mechanics/yswaps/typechained';
+import { IUniswapV2Router02__factory, IERC20__factory, IWETH__factory, TradeFactory, ISolidlyRouter__factory } from '@typechained-yswaps';
 import { mergeTransactions } from '@scripts/libraries/utils/multicall';
 import { impersonate } from '@test-utils/wallet';
 import { SimpleEnabledTrade, Solver } from '@scripts/libraries/types';

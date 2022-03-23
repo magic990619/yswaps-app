@@ -1,5 +1,5 @@
 import { BigNumber, PopulatedTransaction } from 'ethers';
-import { TradeFactory } from '@yearn-mechanics/yswaps/typechained';
+import { TradeFactory } from '@typechained-yswaps';
 import { MainnetSolvers } from '@scripts/configs/mainnet';
 import { FantomSolvers } from '@scripts/configs/fantom';
 

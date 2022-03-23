@@ -1,6 +1,6 @@
 import { utils } from 'ethers';
 import { ethers } from 'hardhat';
-import { IERC20, IERC20__factory } from '@yearn-mechanics/yswaps/typechained';
+import { IERC20, IERC20__factory } from '@typechained-yswaps';
 import { SimpleEnabledTrade } from '../types';
 
 export async function shouldExecuteTrade({

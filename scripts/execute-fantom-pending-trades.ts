@@ -1,6 +1,6 @@
 import { ethers, network } from 'hardhat';
 import { BigNumber, PopulatedTransaction, utils, Wallet } from 'ethers';
-import { TradeFactory } from '@yearn-mechanics/yswaps/typechained';
+import { TradeFactory } from '@typechained-yswaps';
 import moment from 'moment';
 import * as gasprice from './libraries/utils/ftm-gas-price';
 // import kms from '../../commons/tools/kms';
@@ -59,7 +59,7 @@ async function main() {
 
         console.time('[Execution] Total trade execution time in fork');
 
-        console.log('[Execution] Setting fork up to speed with mainnet');
+        console.log('[Execution] Setting fork up to speed with ethereum');
         await evm.reset({
           jsonRpcUrl: getNodeUrl('fantom'),
         });

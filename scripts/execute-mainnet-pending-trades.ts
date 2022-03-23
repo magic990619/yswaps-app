@@ -1,6 +1,6 @@
 import { ethers, network } from 'hardhat';
 import { BigNumber, PopulatedTransaction, utils, Wallet } from 'ethers';
-import { TradeFactory } from '@yearn-mechanics/yswaps/typechained';
+import { TradeFactory } from '@typechained-yswaps';
 import moment from 'moment';
 import * as gasprice from './libraries/utils/gasprice';
 import {
@@ -14,13 +14,12 @@ import {
   SimulationResponseSuccess,
   TransactionSimulationRevert,
 } from '@flashbots/ethers-provider-bundle';
-import kms from '../../commons/tools/kms';
+// import kms from '../../commons/tools/kms';
 import { getNodeUrl } from '@utils/env';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import * as evm from '@test-utils/evm';
 import { abi as BlockProtectionABI } from './abis/BlockProtection';
 import { getMainnetSolversMap, mainnetConfig } from '@scripts/configs/mainnet';
-import { Solver } from './libraries/types';
 
 const DELAY = moment.duration('8', 'minutes').as('milliseconds');
 const RETRIES = 10;
@@ -40,13 +39,15 @@ async function main() {
   console.log('[Setup] Forking mainnet');
 
   // We set this so hardhat-deploys uses the correct deployment addresses.
-  const networkName: SUPPORTED_NETWORKS = 'mainnet';
+  const networkName = 'ethereum';
   process.env.HARDHAT_DEPLOY_FORK = networkName;
   await evm.reset({
     jsonRpcUrl: getNodeUrl(networkName),
   });
 
-  const ymech = new ethers.Wallet(await kms.decrypt(process.env.MAINNET_1_PRIVATE_KEY as string), ethers.provider);
+  // const ymech = new ethers.Wallet(await kms.decrypt(process.env.MAINNET_1_PRIVATE_KEY as string), ethers.provider);
+  const ymech = new ethers.Wallet(process.env.ETHEREUM_1_PRIVATE_KEY as string, ethers.provider);
+
   await ethers.provider.send('hardhat_setBalance', [ymech.address, '0xffffffffffffffff']);
   console.log('[Setup] Executing with address', ymech.address);
 
@@ -54,7 +55,7 @@ async function main() {
   const mainnetSolversMap = await getMainnetSolversMap();
 
   // We create a provider thats connected to a real network, hardhat provider will be connected to fork
-  mainnetProvider = new ethers.providers.JsonRpcProvider(getNodeUrl('mainnet'), { name: 'mainnet', chainId: 1 });
+  mainnetProvider = new ethers.providers.JsonRpcProvider(getNodeUrl('ethereum'), { name: 'mainnet', chainId: 1 });
 
   // console.log('[Setup] Creating flashbots provider ...');
   flashbotsProvider = await FlashbotsBundleProvider.create(
@@ -90,9 +91,9 @@ async function main() {
 
         console.time('[Execution] Total trade execution time in fork');
 
-        console.log('[Execution] Setting fork up to speed with mainnet');
+        console.log('[Execution] Setting fork up to speed with ethereum');
         await evm.reset({
-          jsonRpcUrl: getNodeUrl('mainnet'),
+          jsonRpcUrl: getNodeUrl(networkName),
         });
 
         console.log('[Execution] Taking snapshot of fork');

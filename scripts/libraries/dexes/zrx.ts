@@ -4,8 +4,8 @@ import axiosRetry from 'axios-retry';
 import qs from 'qs';
 import _ from 'lodash';
 import { ethers } from 'hardhat';
-import { IERC20Metadata } from '@yearn-mechanics/yswaps/typechained';
-import { abi as IERC20MetadataABI } from '@artifacts/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol/IERC20Metadata.json';
+import { IERC20Metadata } from '@typechained-yswaps';
+import { abi as IERC20MetadataABI } from '@openzeppelin/contracts/build/contracts/IERC20Metadata.json';
 import { utils } from 'ethers';
 
 axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });

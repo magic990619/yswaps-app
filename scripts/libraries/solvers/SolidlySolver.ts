@@ -3,10 +3,10 @@ import { SimpleEnabledTrade, Solver } from '../types';
 import * as solidlyLibrary from '@libraries/dexes/solidly';
 import { SOLIDLY_FACTORY, SOLIDLY_ROUTER } from '@deploy/fantom-swappers/solidly';
 import { shouldExecuteTrade } from '@scripts/libraries/utils/should-execute-trade';
-import { IERC20Metadata__factory, TradeFactory } from '@yearn-mechanics/yswaps/typechained';
+import { IERC20Metadata__factory, TradeFactory } from '@typechained-yswaps';
 import { PopulatedTransaction, utils } from 'ethers';
 import * as wallet from '@test-utils/wallet';
-import { NETWORK_NAME_IDS, SUPPORTED_NETWORKS } from '../../../../commons/utils/network';
+import { NETWORK_NAME_IDS, SUPPORTED_NETWORKS } from '@utils/network';
 
 export default class SolidlySolver implements Solver {
   async shouldExecuteTrade({ strategy, trades }: { strategy: string; trades: SimpleEnabledTrade[] }): Promise<boolean> {

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { utils, BigNumber, constants, PopulatedTransaction } from 'ethers';
 import { CurveFi__factory } from '@eth-sdk-types';
-import { IERC20__factory, IWETH__factory, TradeFactory } from '@yearn-mechanics/yswaps/typechained';
+import { IERC20__factory, IWETH__factory, TradeFactory } from '@typechained-yswaps';
 import zrx from '@libraries/dexes/zrx';
 import { mergeTransactions } from '@scripts/libraries/utils/multicall';
 import { impersonate } from '@test-utils/wallet';

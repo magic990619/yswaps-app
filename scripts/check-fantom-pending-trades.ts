@@ -1,6 +1,6 @@
 import { ethers, network } from 'hardhat';
 import { BigNumber, PopulatedTransaction, utils, Wallet } from 'ethers';
-import { IERC20Metadata__factory, TradeFactory } from '@yearn-mechanics/yswaps/typechained';
+import { IERC20Metadata__factory, TradeFactory } from '@typechained-yswaps';
 import moment from 'moment';
 import * as gasprice from './libraries/utils/ftm-gas-price';
 // import kms from '../../commons/tools/kms';

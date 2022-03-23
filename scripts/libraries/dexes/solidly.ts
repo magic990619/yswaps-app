@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { ethers } from 'hardhat';
 import { constants, utils } from 'ethers';
-import { ISolidlyFactory, ISolidlyFactory__factory, ISolidlyRouter, ISolidlyRouter__factory } from '@yearn-mechanics/yswaps/typechained';
+import { ISolidlyFactory, ISolidlyFactory__factory, ISolidlyRouter, ISolidlyRouter__factory } from '@typechained-yswaps';
 
 export type SwapParams = {
   tokenIn: string;

@@ -1,14 +1,14 @@
 import { JsonRpcSigner } from '@ethersproject/providers';
 import { BigNumber, constants, PopulatedTransaction, Signer, utils } from 'ethers';
 import { CurveFi, CurveFi__factory } from '@eth-sdk-types';
-import { IERC20, IERC20__factory, IWETH, IWETH__factory, TradeFactory } from '@yearn-mechanics/yswaps/typechained';
+import { IERC20, IERC20__factory, IWETH, IWETH__factory, TradeFactory } from '@typechained-yswaps';
 import zrx from '@libraries/dexes/zrx';
 import { mergeTransactions } from '@scripts/libraries/utils/multicall';
 import { impersonate } from '@test-utils/wallet';
 import { SimpleEnabledTrade, Solver } from '@scripts/libraries/types';
 import { shouldExecuteTrade } from '@scripts/libraries/utils/should-execute-trade';
 import { ethers } from 'hardhat';
-import { ITradeFactoryExecutor } from '@yearn-mechanics/yswaps/typechained';
+import { ITradeFactoryExecutor } from '@typechained-yswaps';
 
 const DUST_THRESHOLD = utils.parseEther('1');
 

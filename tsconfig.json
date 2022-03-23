@@ -12,6 +12,7 @@
       "@deploy": ["deploy/*"],
       "@deployments": ["deployments/*"],
       "@typechained": ["typechained/index"],
+      "@typechained-yswaps": ["typechained-yswaps/index"],
       "@utils": ["test/utils/index"],
       "@utils/*": ["./utils/*"],
       "@test-utils": ["test/utils"],
@@ -20,7 +21,7 @@
       "@unit/*": ["test/unit/*"],
       "@libraries/*": ["scripts/libraries/*"],
       "@scripts/*": ["scripts/*"],
-      "@eth-sdk-types": ["node_modules/.dethcrypto/eth-sdk-client/esm/types"]
+      "@eth-sdk-types": ["node_modules/.dethcrypto/eth-sdk-client/cjs/types"]
     }
   },
   "include": ["./scripts", "./deploy", "./test"],

@@ -75,13 +75,14 @@ const config: HardhatUserConfig = {
   },
   external: {
     deployments: {
-      ethereum: ['node_modules/@yearn-mechanics/yswaps/deployments/mainnet'],
+      ethereum: ['node_modules/@yearn-mechanics/yswaps/deployments/ethereum'],
       fantom: ['node_modules/@yearn-mechanics/yswaps/deployments/fantom'],
     },
   },
   typechain: {
     outDir: 'typechained',
     target: 'ethers-v5',
+    tsNocheck: true,
   },
   paths: {
     sources: './solidity',

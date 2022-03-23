@@ -1,6 +1,6 @@
 import { BigNumber, constants, PopulatedTransaction, utils } from 'ethers';
 import { CurveFi__factory, YvBoostVault__factory } from '@eth-sdk-types';
-import { IERC20__factory, TradeFactory } from '@yearn-mechanics/yswaps/typechained';
+import { IERC20__factory, TradeFactory } from '@typechained-yswaps';
 import zrx from '@libraries/dexes/zrx';
 import { mergeTransactions } from '@scripts/libraries/utils/multicall';
 import { shouldExecuteTrade } from '@scripts/libraries/utils/should-execute-trade';
