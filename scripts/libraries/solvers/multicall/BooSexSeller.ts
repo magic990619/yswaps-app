@@ -1,13 +1,12 @@
 import _ from 'lodash';
-import { utils, constants, PopulatedTransaction } from 'ethers';
+import { utils, BigNumber, constants, PopulatedTransaction } from 'ethers';
 import { IUniswapV2Router02__factory, IERC20__factory, IWETH__factory, TradeFactory, ISolidlyRouter__factory } from '@typechained-yswaps';
 import { mergeTransactions } from '@scripts/libraries/utils/multicall';
 import { impersonate } from '@test-utils/wallet';
 import { SimpleEnabledTrade, Solver } from '@scripts/libraries/types';
 import { shouldExecuteTrade } from '@scripts/libraries/utils/should-execute-trade';
+import * as wallet from '@test-utils/wallet';
 import { ethers } from 'hardhat';
-
-const DUST_THRESHOLD = utils.parseEther('250');
 
 // 1) solid => boo with spookyswap
 
@@ -18,17 +17,17 @@ export class BooSexSeller implements Solver {
   private booAddress = '0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE';
   private wftmAddress = '0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83';
 
-  async shouldExecuteTrade({ strategy, trades }: { strategy: string; trades: SimpleEnabledTrade[] }): Promise<boolean> {
-    return shouldExecuteTrade({ strategy, trades, checkType: 'total' });
+  async shouldExecuteTrade({ strategy, trade }: { strategy: string; trade: SimpleEnabledTrade }): Promise<boolean> {
+    return shouldExecuteTrade({ strategy, trade });
   }
 
   async solve({
     strategy,
-    trades,
+    trade,
     tradeFactory,
   }: {
     strategy: string;
-    trades: SimpleEnabledTrade[];
+    trade: SimpleEnabledTrade;
     tradeFactory: TradeFactory;
   }): Promise<PopulatedTransaction> {
     const multicallSwapperAddress = (await ethers.getContract('MultiCallOptimizedSwapper')).address;

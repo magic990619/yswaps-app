@@ -9,30 +9,34 @@ import * as wallet from '@test-utils/wallet';
 import { NETWORK_NAME_IDS, SUPPORTED_NETWORKS } from '@utils/network';
 
 export default class Dexes implements Solver {
-  async shouldExecuteTrade({ strategy, trades }: { strategy: string; trades: SimpleEnabledTrade[] }): Promise<boolean> {
-    if (trades.length != 1) return false;
-    return shouldExecuteTrade({ strategy, trades, checkType: 'total' });
+  async shouldExecuteTrade({ strategy, trade }: { strategy: string; trade: SimpleEnabledTrade }): Promise<boolean> {
+    return shouldExecuteTrade({ strategy, trade });
   }
 
   async solve({
     strategy,
-    trades,
+    trade,
     tradeFactory,
   }: {
     strategy: string;
-    trades: SimpleEnabledTrade[];
+    trade: SimpleEnabledTrade;
     tradeFactory: TradeFactory;
   }): Promise<PopulatedTransaction> {
-    if (trades.length > 1) throw new Error('Should only be one token in and one token out');
-    const { tokenIn: tokenInAddress, tokenOut: tokenOutAddress } = trades[0];
+    const { tokenIn: tokenInAddress, tokenOut: tokenOutAddress } = trade;
     const [zrxSwapper, tokenIn, tokenOut] = await Promise.all([
       ethers.getContract('ZRX'),
       IERC20Metadata__factory.connect(tokenInAddress, tradeFactory.signer),
       IERC20Metadata__factory.connect(tokenOutAddress, tradeFactory.signer),
     ]);
 
-    const [inSymbol, outSymbol, amount] = await Promise.all([tokenIn.symbol(), tokenOut.symbol(), (await tokenIn.balanceOf(strategy)).sub(1)]);
+    const [inSymbol, outSymbol, amount, inDecimals] = await Promise.all([
+      tokenIn.symbol(),
+      tokenOut.symbol(),
+      (await tokenIn.balanceOf(strategy)).sub(1),
+      tokenIn.decimals(),
+    ]);
 
+    console.log('[Dexes] Total balance is', utils.formatUnits(amount, inDecimals), inSymbol);
     console.log('[Dexes] Getting', inSymbol, '=>', outSymbol, 'trade information');
     const network: SUPPORTED_NETWORKS = process.env.HARDHAT_DEPLOY_FORK as SUPPORTED_NETWORKS;
     const { data: zrxData, minAmountOut: zrxMinAmountOut } = await zrx.quote({

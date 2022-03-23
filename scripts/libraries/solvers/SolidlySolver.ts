@@ -1,7 +1,7 @@
 import { ethers } from 'hardhat';
 import { SimpleEnabledTrade, Solver } from '../types';
 import * as solidlyLibrary from '@libraries/dexes/solidly';
-import { SOLIDLY_FACTORY, SOLIDLY_ROUTER } from '@deploy/fantom-swappers/solidly';
+import { SOLIDLY_FACTORY, SOLIDLY_ROUTER } from '@yearn-mechanics/yswaps/deployments/fantom/s';
 import { shouldExecuteTrade } from '@scripts/libraries/utils/should-execute-trade';
 import { IERC20Metadata__factory, TradeFactory } from '@typechained-yswaps';
 import { PopulatedTransaction, utils } from 'ethers';
@@ -9,22 +9,20 @@ import * as wallet from '@test-utils/wallet';
 import { NETWORK_NAME_IDS, SUPPORTED_NETWORKS } from '@utils/network';
 
 export default class SolidlySolver implements Solver {
-  async shouldExecuteTrade({ strategy, trades }: { strategy: string; trades: SimpleEnabledTrade[] }): Promise<boolean> {
-    if (trades.length != 1) return false;
-    return shouldExecuteTrade({ strategy, trades, checkType: 'total' });
+  async shouldExecuteTrade({ strategy, trade }: { strategy: string; trade: SimpleEnabledTrade }): Promise<boolean> {
+    return shouldExecuteTrade({ strategy, trade });
   }
 
   async solve({
     strategy,
-    trades,
+    trade,
     tradeFactory,
   }: {
     strategy: string;
-    trades: SimpleEnabledTrade[];
+    trade: SimpleEnabledTrade;
     tradeFactory: TradeFactory;
   }): Promise<PopulatedTransaction> {
-    if (trades.length > 1) throw new Error('Should only be one token in and one token out');
-    const { tokenIn: tokenInAddress, tokenOut: tokenOutAddress } = trades[0];
+    const { tokenIn: tokenInAddress, tokenOut: tokenOutAddress } = trade;
     const [solidlySwapper, tokenIn, tokenOut] = await Promise.all([
       ethers.getContract('AsyncSolidly'),
       IERC20Metadata__factory.connect(tokenInAddress, tradeFactory.signer),
