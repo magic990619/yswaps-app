@@ -1,14 +1,14 @@
 import { ethers } from 'hardhat';
 import { SimpleEnabledTrade, Solver } from '../types';
 import * as solidlyLibrary from '@libraries/dexes/solidly';
-import { SOLIDLY_FACTORY, SOLIDLY_ROUTER } from '@yearn-mechanics/yswaps/deployments/fantom/s';
 import { shouldExecuteTrade } from '@scripts/libraries/utils/should-execute-trade';
 import { IERC20Metadata__factory, TradeFactory } from '@typechained-yswaps';
 import { PopulatedTransaction, utils } from 'ethers';
-import * as wallet from '@test-utils/wallet';
-import { NETWORK_NAME_IDS, SUPPORTED_NETWORKS } from '@utils/network';
 
 export default class SolidlySolver implements Solver {
+  private _SOLIDLY_FACTORY = '0x3faab499b519fdc5819e3d7ed0c26111904cbc28';
+  private _SOLIDLY_ROUTER = '0xa38cd27185a464914D3046f0AB9d43356B34829D';
+
   async shouldExecuteTrade({ strategy, trade }: { strategy: string; trade: SimpleEnabledTrade }): Promise<boolean> {
     return shouldExecuteTrade({ strategy, trade });
   }
@@ -43,8 +43,8 @@ export default class SolidlySolver implements Solver {
       tokenIn: tokenInAddress,
       tokenOut: tokenOutAddress,
       amountIn: amount,
-      solidlyFactory: SOLIDLY_FACTORY,
-      solidlyRouter: SOLIDLY_ROUTER,
+      solidlyFactory: this._SOLIDLY_FACTORY,
+      solidlyRouter: this._SOLIDLY_ROUTER,
       slippage: 3,
     });
 
