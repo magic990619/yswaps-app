@@ -2,17 +2,23 @@ import { BigNumber, PopulatedTransaction } from 'ethers';
 import { TradeFactory } from '@typechained-yswaps';
 import { MainnetSolvers } from '../configs/mainnet';
 import { FantomSolvers } from '@scripts/configs/fantom';
+import { Network as EthersNetwork } from '@ethersproject/networks';
+import { DexesSolverMetadata } from './solvers/Dexes';
+import { MultiDexesSolverMetadata } from './solvers/MulticallDexes';
 
 export type DexLibrarySwapProps = {
   tokenIn: string;
   tokenOut: string;
   amountIn: BigNumber;
+  strategy: string;
   hops?: string[];
 };
 
 export type DexLibrarySwapResponse = {
-  data: string;
-  swapTransactionData: string;
+  dex: string;
+  unsignedSwapTx: PopulatedTransaction;
+  swapperData: string;
+  swapperAddress: string;
   amountOut: BigNumber;
   path: string[];
 };
@@ -23,28 +29,30 @@ export abstract class DexLibrary {
 
 export class BaseDexLibrary {
   protected _name: string;
-  protected _network: Network;
+  protected _network: EthersNetwork;
 
-  constructor({ name, network }: { name: string; network: Network }) {
+  constructor({ name, network }: { name: string; network: EthersNetwork }) {
     this._name = name;
     this._network = network;
   }
-  public static async init({ name, network }: { name: string; network: Network }): Promise<BaseDexLibrary> {
+  public static async create({ name, network }: { name: string; network: EthersNetwork }): Promise<BaseDexLibrary> {
     const dexLibraryInstance = new BaseDexLibrary({ name, network });
-    await dexLibraryInstance._loadContracts();
+    await dexLibraryInstance.init();
     return dexLibraryInstance;
   }
-  protected async _loadContracts(): Promise<void> {}
+  protected async init(): Promise<void> {}
 }
 
 export abstract class Solver {
   abstract solve({
     strategy,
     trade,
+    metadata,
     tradeFactory,
   }: {
     strategy: string;
     trade: SimpleEnabledTrade;
+    metadata: SolversMetadataMap[keyof SolversMetadataMap];
     tradeFactory: TradeFactory;
   }): Promise<PopulatedTransaction>;
 
@@ -67,26 +75,12 @@ export type SolversNetworksMap = {
 };
 
 export type Network = keyof SolversNetworksMap;
-type Solvers = SolversNetworksMap[keyof SolversNetworksMap];
-
-// TODO: move to solver
-type DexesSolverMetadata = {
-  hopTokens: string[];
-};
-
-// TODO: move to solver
-type MultiDexesSolverMetadata = {
-  hopTokens: string[];
-};
+export type Solvers = SolversNetworksMap[keyof SolversNetworksMap];
 
 // TODO: enforce that only accepts valid dexes keys from Solvers type
 type SolversMetadataMap = {
   Dexes: DexesSolverMetadata;
-  BooSexSeller: MultiDexesSolverMetadata;
-  BooSolidSeller: MultiDexesSolverMetadata;
-  CurveSpellEth: MultiDexesSolverMetadata;
-  CurveYfiEth: MultiDexesSolverMetadata;
-  SolidlySolver: MultiDexesSolverMetadata;
+  MulticallDexes: MultiDexesSolverMetadata;
   ThreePoolCrv: MultiDexesSolverMetadata;
 };
 

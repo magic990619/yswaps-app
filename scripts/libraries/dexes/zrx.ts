@@ -1,12 +1,11 @@
+import { abi as IERC20MetadataABI } from '@openzeppelin/contracts/build/contracts/IERC20Metadata.json';
+import { IERC20Metadata } from '@typechained-yswaps';
 import { BigNumber } from '@ethersproject/bignumber';
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import qs from 'qs';
-import _ from 'lodash';
+import { BaseDexLibrary, DexLibrary, DexLibrarySwapProps, DexLibrarySwapResponse } from '../types';
 import { ethers } from 'hardhat';
-import { IERC20Metadata } from '@typechained-yswaps';
-import { abi as IERC20MetadataABI } from '@openzeppelin/contracts/build/contracts/IERC20Metadata.json';
-import { utils } from 'ethers';
 
 axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
@@ -57,37 +56,33 @@ export type QuoteResponse = {
   minAmountOut?: BigNumber;
 };
 
-export const quote = async (quoteRequest: QuoteRequest): Promise<QuoteResponse> => {
-  if (BigNumber.isBigNumber(quoteRequest.sellAmount)) quoteRequest.sellAmount = quoteRequest.sellAmount.toString();
-  if (BigNumber.isBigNumber(quoteRequest.buyAmount)) quoteRequest.buyAmount = quoteRequest.buyAmount.toString();
-  if (BigNumber.isBigNumber(quoteRequest.gasPrice)) quoteRequest.gasPrice = quoteRequest.gasPrice.toString();
-
-  quoteRequest.excludeSources = (quoteRequest.excludeSources as string[]) ?? [];
-  quoteRequest.excludeSources.push('Mesh');
-
-  quoteRequest.excludeSources = quoteRequest.excludeSources.join(',');
-
-  let response: any;
-  let data: QuoteResponse;
-  try {
-    response = await axios.get(`https://${API_URL[quoteRequest.chainId]}/swap/v1/quote?${qs.stringify(quoteRequest)}`);
-    data = response.data as QuoteResponse;
-    // Fix for slippage not working as expected
-    if (quoteRequest.hasOwnProperty('slippagePercentage')) {
-      const tokenFrom = (await ethers.getContractAt(IERC20MetadataABI, quoteRequest.sellToken)) as IERC20Metadata;
-      const tokenFromDecimals = await tokenFrom.decimals();
-      const tokenTo = (await ethers.getContractAt(IERC20MetadataABI, quoteRequest.buyToken)) as IERC20Metadata;
-      const tokenToDecimals = await tokenTo.decimals();
-      const rateFromTo = utils.parseUnits(data.guaranteedPrice, tokenToDecimals);
-      data.minAmountOut = BigNumber.from(`${data.sellAmount}`).mul(rateFromTo).div(BigNumber.from(10).pow(tokenFromDecimals));
+export class ZrxLibrary extends BaseDexLibrary implements DexLibrary {
+  async swap({ tokenIn, amountIn, tokenOut }: DexLibrarySwapProps): Promise<DexLibrarySwapResponse> {
+    const [tokenInContract, tokenOutContract] = await Promise.all([
+      ethers.getContractAt<IERC20Metadata>(IERC20MetadataABI, tokenIn),
+      ethers.getContractAt<IERC20Metadata>(IERC20MetadataABI, tokenOut),
+    ]);
+    const quoteRequest: QuoteRequest = {
+      sellToken: tokenIn,
+      buyToken: tokenOut,
+      sellAmount: amountIn.toString(),
+      chainId: this._network.chainId,
+      excludeSources: ['Mesh'],
+    };
+    try {
+      const response = await axios.get(`https://${API_URL[quoteRequest.chainId]}/swap/v1/quote?${qs.stringify(quoteRequest)}`);
+      const quoteResponse = response.data as QuoteResponse;
+      return {
+        dex: 'zrx',
+        unsignedSwapTx: await tokenInContract.populateTransaction.decimals(), // MOCKED
+        swapperData: quoteResponse.data,
+        swapperAddress: '',
+        amountOut: BigNumber.from(quoteResponse.buyAmount),
+        path: [tokenIn, tokenOut],
+      };
+    } catch (err: any) {
+      const code = err.response ? err.response.data.code : err.code;
+      throw new Error(`Error code: ${code}. Reason: ${err.response?.data.reason}`);
     }
-  } catch (err: any) {
-    const code = err.response ? err.response.data.code : err.code;
-    throw new Error(`Error code: ${code}. Reason: ${err.response?.data.reason}`);
   }
-  return data;
-};
-
-export default {
-  quote,
-};
+}

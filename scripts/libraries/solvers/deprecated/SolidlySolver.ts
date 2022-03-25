@@ -1,5 +1,5 @@
 import { ethers } from 'hardhat';
-import { SimpleEnabledTrade, Solver } from '../types';
+import { SimpleEnabledTrade, Solver } from '../../types';
 import * as solidlyLibrary from '@libraries/dexes/solidly';
 import { shouldExecuteTrade } from '@scripts/libraries/utils/should-execute-trade';
 import { IERC20Metadata__factory, TradeFactory } from '@typechained-yswaps';
