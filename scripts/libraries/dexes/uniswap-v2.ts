@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { ethers } from 'hardhat';
 import { constants } from 'ethers';
-import { BaseDexLibrary, DexLibrary, DexLibrarySwapProps, DexLibrarySwapResponse } from '../types';
 import { IUniswapV2Factory, IUniswapV2Factory__factory, IUniswapV2Router02, IUniswapV2Router02__factory } from '@typechained-yswaps';
 import {
   SPIRITSWAP_FACTORY_REGISTRY,
@@ -13,6 +12,7 @@ import {
   UNISWAP_V2_FACTORY_REGISTRY,
   UNISWAP_V2_ROUTER_REGISTRY,
 } from '@scripts/configs/addresses-registry';
+import { BaseDexLibrary, DexLibrary, DexLibrarySwapProps, DexLibrarySwapResponse } from './dex-library';
 
 export class UniswapLibrary extends BaseDexLibrary implements DexLibrary {
   protected _router!: IUniswapV2Router02;

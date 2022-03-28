@@ -2,8 +2,8 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { ethers } from 'hardhat';
 import { constants } from 'ethers';
 import { ISolidlyFactory, ISolidlyFactory__factory, ISolidlyRouter, ISolidlyRouter__factory } from '@typechained-yswaps';
-import { BaseDexLibrary, DexLibrary, DexLibrarySwapProps, DexLibrarySwapResponse } from '../types';
 import { SOLIDLY_FACTORY_REGISTRY, SOLIDLY_ROUTER_REGISTRY } from '@scripts/configs/addresses-registry';
+import { BaseDexLibrary, DexLibrary, DexLibrarySwapProps, DexLibrarySwapResponse } from './dex-library';
 
 export class SolidlyLibrary extends BaseDexLibrary implements DexLibrary {
   protected _router!: ISolidlyRouter;

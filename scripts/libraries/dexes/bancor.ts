@@ -6,7 +6,7 @@ import { SUPPORTED_NETWORKS } from '@utils/network';
 import { getNodeUrl } from '@utils/env';
 import { utils } from 'ethers';
 import { ethers } from 'hardhat';
-import { BaseDexLibrary, DexLibrary, DexLibrarySwapProps, DexLibrarySwapResponse } from '../types';
+import { BaseDexLibrary, DexLibrary, DexLibrarySwapProps, DexLibrarySwapResponse } from './dex-library';
 
 export class BancorLibrary extends BaseDexLibrary implements DexLibrary {
   protected _bancorSDK!: BancorSDK;

@@ -4,8 +4,8 @@ import axiosRetry from 'axios-retry';
 import qs from 'qs';
 import { abi as IERC20MetadataABI } from '@openzeppelin/contracts/build/contracts/IERC20Metadata.json';
 import { IERC20Metadata } from '@typechained-yswaps';
-import { BaseDexLibrary, DexLibrary, DexLibrarySwapProps, DexLibrarySwapResponse } from '../types';
 import { ethers } from 'hardhat';
+import { BaseDexLibrary, DexLibrary, DexLibrarySwapProps, DexLibrarySwapResponse } from './dex-library';
 
 axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 

@@ -1,6 +1,6 @@
 import { ethers } from 'hardhat';
 import { ZrxLibrary } from '../dexes/zrx';
-import { DexLibrary } from '../types';
+import { DexLibrary } from './dex-library';
 import { SpookyswapLibrary, UniswapLibrary } from './uniswap-v2';
 
 export type SUPPORTED_NETWORKS_MOCK = 'mainnet' | 'fantom';

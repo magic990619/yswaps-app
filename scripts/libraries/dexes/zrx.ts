@@ -4,8 +4,8 @@ import { BigNumber } from '@ethersproject/bignumber';
 import axios from 'axios';
 import axiosRetry from 'axios-retry';
 import qs from 'qs';
-import { BaseDexLibrary, DexLibrary, DexLibrarySwapProps, DexLibrarySwapResponse } from '../types';
 import { ethers } from 'hardhat';
+import { BaseDexLibrary, DexLibrary, DexLibrarySwapProps, DexLibrarySwapResponse } from './dex-library';
 
 axiosRetry(axios, { retries: 3, retryDelay: axiosRetry.exponentialDelay });
 
