@@ -3,7 +3,7 @@ import { DexLibrarySwapResponse, SimpleEnabledTrade, Solver } from '../types';
 import { shouldExecuteTrade } from '@scripts/libraries/utils/should-execute-trade';
 import { IERC20Metadata__factory, TradeFactory } from '@typechained-yswaps';
 import { PopulatedTransaction, utils } from 'ethers';
-import { dexesNerworkMapMock, SUPPORTED_NETWORKS_MOCK } from '../utils/dexes-libraries-mock';
+import { get as getDexes, SUPPORTED_NETWORKS_MOCK } from '@libraries/dexes';
 
 export type DexesSolverMetadata = {
   hopTokens: string[];
@@ -44,7 +44,7 @@ export default class Dexes implements Solver {
     console.log('[Dexes] Getting', inSymbol, '=>', outSymbol, 'trade information');
 
     const network = process.env.HARDHAT_DEPLOY_FORK as SUPPORTED_NETWORKS_MOCK;
-    const dexesMap = dexesNerworkMapMock[network];
+    const dexesMap = (await getDexes())[network];
     const dexes = Object.values(dexesMap);
 
     let bestDexResponse: DexLibrarySwapResponse | undefined;

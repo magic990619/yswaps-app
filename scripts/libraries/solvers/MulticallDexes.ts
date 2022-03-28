@@ -4,9 +4,8 @@ import { shouldExecuteTrade } from '@scripts/libraries/utils/should-execute-trad
 import { IERC20Metadata__factory, TradeFactory } from '@typechained-yswaps';
 import { BigNumber, PopulatedTransaction, utils } from 'ethers';
 import * as wallet from '@test-utils/wallet';
-import { NETWORK_NAME_IDS, SUPPORTED_NETWORKS } from '@utils/network';
-import { dexesNerworkMapMock, FANTOM_DEXES, MAINNET_DEXES, SUPPORTED_NETWORKS_MOCK } from '../utils/dexes-libraries-mock';
 import { mergeTransactions } from '../utils/multicall';
+import { get as getDexes, SUPPORTED_NETWORKS_MOCK } from '@libraries/dexes';
 
 export type MultiDexesSolverMetadata = {
   hopTokens: string[];
@@ -50,7 +49,7 @@ export default class MulticallDexes implements Solver {
     console.log('[Dexes] Getting', inSymbol, '=>', outSymbol, 'trade information');
 
     const network = process.env.HARDHAT_DEPLOY_FORK as SUPPORTED_NETWORKS_MOCK;
-    const dexesMap = dexesNerworkMapMock[network];
+    const dexesMap = (await getDexes())[network];
     const dexes = Object.values(dexesMap);
     const dexesBestResults: DexLibrarySwapResponse[] = []; // index will represent the path order.
 

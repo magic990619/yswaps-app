@@ -3,7 +3,7 @@ import { ethers } from 'hardhat';
 import { constants } from 'ethers';
 import { ISolidlyFactory, ISolidlyFactory__factory, ISolidlyRouter, ISolidlyRouter__factory } from '@typechained-yswaps';
 import { BaseDexLibrary, DexLibrary, DexLibrarySwapProps, DexLibrarySwapResponse } from '../types';
-import { SOLIDLY_FACTORY_REGISTRY, SOLIDLY_ROUTER_REGISTRY } from '@yearn-mechanics/yswaps/deploy/addresses-registry';
+import { SOLIDLY_FACTORY_REGISTRY, SOLIDLY_ROUTER_REGISTRY } from '@scripts/configs/addresses-registry';
 
 export class SolidlyLibrary extends BaseDexLibrary implements DexLibrary {
   protected _router!: ISolidlyRouter;

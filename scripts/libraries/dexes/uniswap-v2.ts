@@ -4,15 +4,15 @@ import { constants } from 'ethers';
 import { BaseDexLibrary, DexLibrary, DexLibrarySwapProps, DexLibrarySwapResponse } from '../types';
 import { IUniswapV2Factory, IUniswapV2Factory__factory, IUniswapV2Router02, IUniswapV2Router02__factory } from '@typechained-yswaps';
 import {
-  UNISWAP_V2_FACTORY_REGISTRY,
-  UNISWAP_V2_ROUTER_REGISTRY,
-  SUSHISWAP_FACTORY_REGISTRY,
-  SUSHISWAP_ROUTER_REGISTRY,
-  SPOOKYSWAP_FACTORY_REGISTRY,
-  SPOOKYSWAP_ROUTER_REGISTRY,
   SPIRITSWAP_FACTORY_REGISTRY,
   SPIRITSWAP_ROUTER_REGISTRY,
-} from '@yearn-mechanics/yswaps/deploy/addresses-registry';
+  SPOOKYSWAP_FACTORY_REGISTRY,
+  SPOOKYSWAP_ROUTER_REGISTRY,
+  SUSHISWAP_FACTORY_REGISTRY,
+  SUSHISWAP_ROUTER_REGISTRY,
+  UNISWAP_V2_FACTORY_REGISTRY,
+  UNISWAP_V2_ROUTER_REGISTRY,
+} from '@scripts/configs/addresses-registry';
 
 export class UniswapLibrary extends BaseDexLibrary implements DexLibrary {
   protected _router!: IUniswapV2Router02;

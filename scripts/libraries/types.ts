@@ -28,15 +28,13 @@ export abstract class DexLibrary {
 }
 
 export class BaseDexLibrary {
-  protected _name: string;
   protected _network: EthersNetwork;
 
-  constructor({ name, network }: { name: string; network: EthersNetwork }) {
-    this._name = name;
+  constructor({ network }: { network: EthersNetwork }) {
     this._network = network;
   }
-  public static async create({ name, network }: { name: string; network: EthersNetwork }): Promise<BaseDexLibrary> {
-    const dexLibraryInstance = new BaseDexLibrary({ name, network });
+  public static async create({ network }: { network: EthersNetwork }): Promise<BaseDexLibrary> {
+    const dexLibraryInstance = new BaseDexLibrary({ network });
     await dexLibraryInstance.init();
     return dexLibraryInstance;
   }
