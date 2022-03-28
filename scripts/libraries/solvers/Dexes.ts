@@ -1,9 +1,11 @@
 import { ethers } from 'hardhat';
-import { DexLibrarySwapResponse, SimpleEnabledTrade, Solver } from '../types';
+import { SimpleEnabledTrade } from '../types';
 import { shouldExecuteTrade } from '@scripts/libraries/utils/should-execute-trade';
 import { IERC20Metadata__factory, TradeFactory } from '@typechained-yswaps';
 import { PopulatedTransaction, utils } from 'ethers';
 import { get as getDexes, SUPPORTED_NETWORKS_MOCK } from '@libraries/dexes';
+import { Solver } from './Solver';
+import { DexLibrarySwapResponse } from '../dexes/dex-library';
 
 export type DexesSolverMetadata = {
   hopTokens: string[];

@@ -17,6 +17,7 @@ export type DexLibrarySwapResponse = {
   swapperAddress: Address;
   amountOut: BigNumber;
   path: Address[];
+  router: Address;
 };
 
 export abstract class DexLibrary {

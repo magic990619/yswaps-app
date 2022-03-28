@@ -1,11 +1,13 @@
 import { ethers } from 'hardhat';
-import { DexLibrarySwapResponse, SimpleEnabledTrade, Solver, Solvers } from '../types';
+import { SimpleEnabledTrade, Solvers } from '../types';
 import { shouldExecuteTrade } from '@scripts/libraries/utils/should-execute-trade';
 import { IERC20Metadata__factory, TradeFactory } from '@typechained-yswaps';
-import { BigNumber, PopulatedTransaction, utils } from 'ethers';
+import { BigNumber, constants, PopulatedTransaction, utils } from 'ethers';
 import * as wallet from '@test-utils/wallet';
 import { mergeTransactions } from '../utils/multicall';
 import { get as getDexes, SUPPORTED_NETWORKS_MOCK } from '@libraries/dexes';
+import { Solver } from './Solver';
+import { DexLibrarySwapResponse } from '../dexes/dex-library';
 
 export type MultiDexesSolverMetadata = {
   hopTokens: string[];
@@ -103,6 +105,7 @@ export default class MulticallDexes implements Solver {
 
     const firstSwapResponse = dexesBestResults[0];
     const lastSwapResponse = dexesBestResults[1];
+    const transactions: PopulatedTransaction[] = [];
 
     // TODO: check if both paths uses same dex.
     let uniqueSwapResponse: DexLibrarySwapResponse | undefined;
@@ -117,11 +120,22 @@ export default class MulticallDexes implements Solver {
       //   });
     }
 
+    // allowance checks
+    for (const response of uniqueSwapResponse ? [uniqueSwapResponse] : dexesBestResults) {
+      const token = await IERC20Metadata__factory.connect(response.path[0], tradeFactory.signer);
+      const { swapperAddress, router, amountOut, dex } = response;
+      const approveToken = (await token.allowance(swapperAddress, router)).lt(amountOut);
+      if (approveToken) {
+        console.log(`[MulticallSolver] Approving ${await token.symbol()} to ${dex} router`);
+        const approveTx = await token.populateTransaction.approve(router, constants.MaxUint256);
+        transactions.push(approveTx);
+      }
+      transactions.push(response.unsignedSwapTx);
+    }
+
     const amountOut = uniqueSwapResponse ? uniqueSwapResponse.amountOut : lastSwapResponse.amountOut;
     const minAmountOut = amountOut.sub(amountOut.mul(3).div(100));
-    const data = uniqueSwapResponse
-      ? mergeTransactions([uniqueSwapResponse.unsignedSwapTx]) // TODO check if theres a util for single tx
-      : mergeTransactions(dexesBestResults.map((result) => result.unsignedSwapTx));
+    const data = mergeTransactions(transactions);
 
     const multicallSwapper = await ethers.getContract('MultiCallOptimizedSwapper');
     const swapperAddress = uniqueSwapResponse ? uniqueSwapResponse.swapperAddress : multicallSwapper.address;
