@@ -3,18 +3,30 @@ import { ethers } from 'hardhat';
 import { constants } from 'ethers';
 import { BaseDexLibrary, DexLibrary, DexLibrarySwapProps, DexLibrarySwapResponse } from '../types';
 import { IUniswapV2Factory, IUniswapV2Factory__factory, IUniswapV2Router02, IUniswapV2Router02__factory } from '@typechained-yswaps';
-import { UNISWAP_V2_FACTORY, UNISWAP_V2_ROUTER } from '@deploy/mainnet-swappers/uniswap_v2';
-import { SUSHISWAP_FACTORY, SUSHISWAP_ROUTER } from '@deploy/common-swappers/sushiswap';
-import { SPOOKYSWAP_FACTORY, SPOOKYSWAP_ROUTER } from '@deploy/fantom-swappers/spookyswap';
-import { SPIRITSWAP_FACTORY, SPIRITSWAP_ROUTER } from '@deploy/fantom-swappers/spiritswap';
+import {
+  UNISWAP_V2_FACTORY_REGISTRY,
+  UNISWAP_V2_ROUTER_REGISTRY,
+  SUSHISWAP_FACTORY_REGISTRY,
+  SUSHISWAP_ROUTER_REGISTRY,
+  SPOOKYSWAP_FACTORY_REGISTRY,
+  SPOOKYSWAP_ROUTER_REGISTRY,
+  SPIRITSWAP_FACTORY_REGISTRY,
+  SPIRITSWAP_ROUTER_REGISTRY,
+} from '@yearn-mechanics/yswaps/deploy/addresses-registry';
 
 export class UniswapLibrary extends BaseDexLibrary implements DexLibrary {
   protected _router!: IUniswapV2Router02;
   protected _factory!: IUniswapV2Factory;
 
   protected async init(): Promise<void> {
-    this._factory = await ethers.getContractAt<IUniswapV2Factory>(IUniswapV2Factory__factory.abi, UNISWAP_V2_FACTORY[this._network.chainId]);
-    this._router = await ethers.getContractAt<IUniswapV2Router02>(IUniswapV2Router02__factory.abi, UNISWAP_V2_ROUTER[this._network.chainId]);
+    this._factory = await ethers.getContractAt<IUniswapV2Factory>(
+      IUniswapV2Factory__factory.abi,
+      UNISWAP_V2_FACTORY_REGISTRY.get(Number(this._network.chainId))!
+    );
+    this._router = await ethers.getContractAt<IUniswapV2Router02>(
+      IUniswapV2Router02__factory.abi,
+      UNISWAP_V2_ROUTER_REGISTRY.get(Number(this._network.chainId))!
+    );
   }
 
   async swap({ tokenIn, amountIn, tokenOut }: DexLibrarySwapProps): Promise<DexLibrarySwapResponse> {
@@ -56,8 +68,14 @@ export class UniswapLibrary extends BaseDexLibrary implements DexLibrary {
 
 export class SushiswapLibrary extends UniswapLibrary {
   protected async _loadContracts(): Promise<void> {
-    this._factory = await ethers.getContractAt<IUniswapV2Factory>(IUniswapV2Factory__factory.abi, SUSHISWAP_FACTORY[this._network.chainId]);
-    this._router = await ethers.getContractAt<IUniswapV2Router02>(IUniswapV2Router02__factory.abi, SUSHISWAP_ROUTER[this._network.chainId]);
+    this._factory = await ethers.getContractAt<IUniswapV2Factory>(
+      IUniswapV2Factory__factory.abi,
+      SUSHISWAP_FACTORY_REGISTRY.get(Number(this._network.chainId))!
+    );
+    this._router = await ethers.getContractAt<IUniswapV2Router02>(
+      IUniswapV2Router02__factory.abi,
+      SUSHISWAP_ROUTER_REGISTRY.get(Number(this._network.chainId))!
+    );
   }
 
   async swap(props: DexLibrarySwapProps): Promise<DexLibrarySwapResponse> {
@@ -69,8 +87,14 @@ export class SushiswapLibrary extends UniswapLibrary {
 
 export class SpookyswapLibrary extends UniswapLibrary {
   protected async _loadContracts(): Promise<void> {
-    this._factory = await ethers.getContractAt<IUniswapV2Factory>(IUniswapV2Factory__factory.abi, SPOOKYSWAP_FACTORY);
-    this._router = await ethers.getContractAt<IUniswapV2Router02>(IUniswapV2Router02__factory.abi, SPOOKYSWAP_ROUTER);
+    this._factory = await ethers.getContractAt<IUniswapV2Factory>(
+      IUniswapV2Factory__factory.abi,
+      SPOOKYSWAP_FACTORY_REGISTRY.get(Number(this._network.chainId))!
+    );
+    this._router = await ethers.getContractAt<IUniswapV2Router02>(
+      IUniswapV2Router02__factory.abi,
+      SPOOKYSWAP_ROUTER_REGISTRY.get(Number(this._network.chainId))!
+    );
   }
 
   async swap(props: DexLibrarySwapProps): Promise<DexLibrarySwapResponse> {
@@ -82,8 +106,14 @@ export class SpookyswapLibrary extends UniswapLibrary {
 
 export class SpiritswapLibrary extends UniswapLibrary {
   protected async _loadContracts(): Promise<void> {
-    this._factory = await ethers.getContractAt<IUniswapV2Factory>(IUniswapV2Factory__factory.abi, SPIRITSWAP_FACTORY);
-    this._router = await ethers.getContractAt<IUniswapV2Router02>(IUniswapV2Router02__factory.abi, SPIRITSWAP_ROUTER);
+    this._factory = await ethers.getContractAt<IUniswapV2Factory>(
+      IUniswapV2Factory__factory.abi,
+      SPIRITSWAP_FACTORY_REGISTRY.get(Number(this._network.chainId))!
+    );
+    this._router = await ethers.getContractAt<IUniswapV2Router02>(
+      IUniswapV2Router02__factory.abi,
+      SPIRITSWAP_ROUTER_REGISTRY.get(Number(this._network.chainId))!
+    );
   }
 
   async swap(props: DexLibrarySwapProps): Promise<DexLibrarySwapResponse> {

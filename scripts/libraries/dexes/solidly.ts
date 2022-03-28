@@ -3,15 +3,21 @@ import { ethers } from 'hardhat';
 import { constants } from 'ethers';
 import { ISolidlyFactory, ISolidlyFactory__factory, ISolidlyRouter, ISolidlyRouter__factory } from '@typechained-yswaps';
 import { BaseDexLibrary, DexLibrary, DexLibrarySwapProps, DexLibrarySwapResponse } from '../types';
-import { SOLIDLY_FACTORY, SOLIDLY_ROUTER } from '@deploy/fantom-swappers/solidly';
+import { SOLIDLY_FACTORY_REGISTRY, SOLIDLY_ROUTER_REGISTRY } from '@yearn-mechanics/yswaps/deploy/addresses-registry';
 
 export class SolidlyLibrary extends BaseDexLibrary implements DexLibrary {
   protected _router!: ISolidlyRouter;
   protected _factory!: ISolidlyFactory;
 
   protected async init(): Promise<void> {
-    this._factory = await ethers.getContractAt<ISolidlyFactory>(ISolidlyFactory__factory.abi, SOLIDLY_FACTORY);
-    this._router = await ethers.getContractAt<ISolidlyRouter>(ISolidlyRouter__factory.abi, SOLIDLY_ROUTER);
+    this._factory = await ethers.getContractAt<ISolidlyFactory>(
+      ISolidlyFactory__factory.abi,
+      SOLIDLY_FACTORY_REGISTRY.get(Number(this._network.chainId))!
+    );
+    this._router = await ethers.getContractAt<ISolidlyRouter>(
+      ISolidlyRouter__factory.abi,
+      SOLIDLY_ROUTER_REGISTRY.get(Number(this._network.chainId))!
+    );
   }
 
   async swap({ tokenIn, amountIn, tokenOut }: DexLibrarySwapProps): Promise<DexLibrarySwapResponse> {
