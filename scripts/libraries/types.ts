@@ -6,21 +6,24 @@ import { Network as EthersNetwork } from '@ethersproject/networks';
 import { DexesSolverMetadata } from './solvers/Dexes';
 import { MultiDexesSolverMetadata } from './solvers/MulticallDexes';
 
+export type Name = string;
+export type Address = string;
+
 export type DexLibrarySwapProps = {
-  tokenIn: string;
-  tokenOut: string;
+  tokenIn: Address;
+  tokenOut: Address;
   amountIn: BigNumber;
-  strategy: string;
-  hops?: string[];
+  strategy: Address;
+  hops?: Address[];
 };
 
 export type DexLibrarySwapResponse = {
-  dex: string;
+  dex: Name;
   unsignedSwapTx: PopulatedTransaction;
   swapperData: string;
-  swapperAddress: string;
+  swapperAddress: Address;
   amountOut: BigNumber;
-  path: string[];
+  path: Address[];
 };
 
 export abstract class DexLibrary {
@@ -48,18 +51,18 @@ export abstract class Solver {
     metadata,
     tradeFactory,
   }: {
-    strategy: string;
+    strategy: Address;
     trade: SimpleEnabledTrade;
     metadata: SolversMetadataMap[keyof SolversMetadataMap];
     tradeFactory: TradeFactory;
   }): Promise<PopulatedTransaction>;
 
-  abstract shouldExecuteTrade({ strategy, trade }: { strategy: string; trade: SimpleEnabledTrade }): Promise<boolean>;
+  abstract shouldExecuteTrade({ strategy, trade }: { strategy: Address; trade: SimpleEnabledTrade }): Promise<boolean>;
 }
 
 export type SimpleEnabledTrade = {
-  tokenIn: string;
-  tokenOut: string;
+  tokenIn: Address;
+  tokenOut: Address;
   threshold: BigNumber;
 };
 
@@ -91,7 +94,7 @@ type TradeConfiguration<T extends Network> = {
 }[SolversNetworksMap[T]];
 
 export type StrategyConfiguration<T extends Network> = {
-  [strategy: string]: {
+  [strategy: Address]: {
     name: string;
     tradesConfigurations: TradeConfiguration<T>[];
   };
